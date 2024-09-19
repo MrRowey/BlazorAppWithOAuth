@@ -1,5 +1,9 @@
 name: Github Pages - Deploy
 
+env:
+  SOURCE_DIR: BlazorApp1
+  PUBLISH_DIR: BlazorApp1/release/wwwroot
+
 # Run Workflow on every push to the main branch
 on:
   workflow_dispatch:
