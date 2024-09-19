@@ -19,7 +19,7 @@ jobs:
           dotnet-version: '5.0.x'
       # publishes Blazor project to the release folder
       - name: Publish .NET Project
-        run: dotnet publish BlazorApp1.csproj -c Release -o release --nologo
+        run: dotnet publish BlazorApp1/BlazorApp1.csproj -c Release -o release --nologo
       # changes the base-tag in index.html from '/' to 'BlazorAppWithOAuth' to match Github Pages
       - name: Chnage base-tag in index.html from / to BlazorAppWithOAuth
         run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorAppWithOAuth\/" \/>/g' release/wwwroot/index.html
