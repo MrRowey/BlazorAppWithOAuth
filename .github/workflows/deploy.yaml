@@ -1,39 +1,70 @@
-name: Deploy to Github Pages
+name: Github Pages - Deploy
 
 # Run Workflow on every push to the main branch
 on:
+  workflow_dispatch:
+  workflow_call:
   push:
-    branches: [master]
+    branches: [deploy/gh-pages]
 
 jobs:
   deploy-to-github-pages:
-    # use ubuntu-lates image to run steps on
     runs-on: ubuntu-latest
     steps:
-      # uses Github's Checkout action to checkout the code from the main branch
-      - uses: actions/checkout@v4
-      # sets up .NET SDK 5.0.x
-      - name: Setup .NET SDK 5.0.X
-        uses: actions/setup-dotnet@v4.0.1
+      - name: Checkout the Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK 8.0.X
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      # publishes Blazor project to the release folder
-      - name: Publish .NET Project
-        run: dotnet publish BlazorApp1/BlazorApp1.csproj -c Release -o release --nologo
-      # changes the base-tag in index.html from '/' to 'BlazorAppWithOAuth' to match Github Pages
-      - name: Chnage base-tag in index.html from / to BlazorAppWithOAuth
-        run: sed -i 's/<base href="\/" \/>/<base href="\/BlazorAppWithOAuth\/" \/>/g' release/wwwroot/index.html
-      # copy index.html to 404.html to server the same file when a file is not found
-      - name: copy Index.html to 404.html
-        run: cp release/wwwroot/index.html release/wwwroot/404.html
-      # add .nojekyll file to tell github pages to not treat this as a Jekyll project. (Alows files and folders starting with a underscore)
-      - name: Add .nojekyll file
-        run: touch release/wwwroot/.nojekyll
-      # publish 222root directory to Github pages
-      - name: Commit wwwroot to Github Pages
-        uses: JamesIves/github-pages-deploy-action@v4.6.4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN}}
-          branch: gh-pages # The Branch the action should deploy to.
-          folder: release/wwwroot # the folder the action should deploy
 
+      - name: Install Tools
+        run: dotnet workload install wasm-tools
+
+        # https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-restore
+      - name: Restore dependenices
+        run: dotnet restore
+
+      - name: Publish .NET Project
+        working-directory: ${{env.SOURCE_DIR}}
+        run: |
+          dotnet restore
+          dotnet publish BlazorApp1.csproj -c Release -o release --nologo --no-restore
+
+      # Upload intermediate result so that we can inspect it
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: ${{ENV.PUBLISH_DIR}}
+          retention-days: 1
+
+      # changes the base-tag in index.html from '/' to 'BlazorAppWithOAuth' to match GitHub Pages repository subdirectory
+      - name: Change base-tag in index.html from / to BlazorAppWithOAuth
+        working-directory: ${{env.PUBLISH_DIR}}
+        run: sed -i 's/<base href="\/" \/>/<base href="\/scfa-cs-replay\/" \/>/g' index.html
+
+      # copy index.html to 404.html to serve the same file when a file is not found
+      - name: copy index.html to 404.html
+        working-directory: ${{env.PUBLISH_DIR}}
+        run: cp index.html 404.html
+
+      # add .nojekyll file to tell GitHub pages to not treat this as a Jekyll project. (Allow files and folders starting with an underscore)
+      - name: Add .nojekyll file
+        working-directory: ${{env.PUBLISH_DIR}}
+        run: touch .nojekyll
+
+      # Upload intermediate result so that we can inspect it
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-processed
+          path: ${{ENV.PUBLISH_DIR}}
+          retention-days: 1
+
+      # publishes wwwroot directory to GitHub Pages
+      - name: Commit wwwroot to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: live/gh-pages
+          token: ${{ secrets.GITHUB_TOKEN }}
+          folder: ${{env.PUBLISH_DIR}}
