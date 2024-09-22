@@ -1,4 +1,6 @@
-﻿@page "/replays"
+﻿@page "/replays";
+@inject HttpClient Http;
+
 
 <PageTitle>Replays</PageTitle>
 
@@ -7,5 +9,11 @@
 
 
 @code {
+    private string apiResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        apiResponse = await Http.GetStringAsync("https://api.faforever.com/data/game"); // This will include the accses token in the request
+    }
 
 }
