@@ -1,0 +1,22 @@
+﻿@page "/fetchdata";
+@inject BlazorApp1.Services.ApiService ApiService
+
+@code {
+    private string statusMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            statusMessage = "Fetching data from FAF API...";
+            await ApiService.FetchAvatarData();
+            statusMessage = "Data fetched successfully and saved to avatarData.json!";
+        }
+        catch (Exception ex)
+        {
+            statusMessage = $"Error fetching data: {ex.Message}";
+        }
+    }
+}
+
+<h3>@statusMessage</h3>
