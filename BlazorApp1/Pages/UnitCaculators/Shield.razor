@@ -325,9 +325,6 @@
         {
             UnitID = originalData.UnitID;
             Health = ReduceByPercentage(originalData.Health, 5);
-            MassCost = ReduceByPercentage(originalData.MassCost, 5);
-            EnergyCost = ReduceByPercentage(originalData.EnergyCost, 5);
-            BuildTime = ReduceByPercentage(originalData.BuildTime, 5);
             ShieldHealth = ReduceByPercentage(originalData.ShieldHealth, 5);
             ShieldRegen = ReduceByPercentage(originalData.ShieldRegen, 5);
             ShieldSize = ReduceByPercentage(originalData.ShieldSize, 5);
@@ -338,9 +335,6 @@
         }
 
         public int Health { get; set; }
-        public int MassCost { get; set; }
-        public int EnergyCost { get; set; }
-        public int BuildTime { get; set; }
         public int ShieldHealth { get; set; }
         public int ShieldRegen { get; set; }
         public int ShieldSize { get; set; }
@@ -359,9 +353,6 @@
         {
             UnitID = originalData.UnitID;
             Health = ReduceByPercentage(originalData.Health, 10);
-            MassCost = ReduceByPercentage(originalData.MassCost, 10);
-            EnergyCost = ReduceByPercentage(originalData.EnergyCost, 10);
-            BuildTime = ReduceByPercentage(originalData.BuildTime, 10);
             ShieldHealth = ReduceByPercentage(originalData.ShieldHealth, 10);
             ShieldRegen = ReduceByPercentage(originalData.ShieldRegen, 10);
             ShieldSize = ReduceByPercentage(originalData.ShieldSize, 10);
