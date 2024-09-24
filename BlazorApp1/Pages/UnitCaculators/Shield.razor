@@ -1,0 +1,386 @@
+﻿@page "/unit-caculators/shield"
+
+<h3>Shield Caculator</h3>
+
+<EditForm Model="@shieldData" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="UnitID">Unit ID:</label>
+        <InputText id="UnitID" @bind-Value="shieldData.UnitID" />
+    </div>
+
+    <div>
+        <label for="Health">Health:</label>
+        <InputNumber id="Health" @bind-Value="shieldData.Health" />
+    </div>
+
+    <div>
+        <label for="MassCost">Mass Cost:</label>
+        <InputNumber id="MassCost" @bind-Value="shieldData.MassCost" />
+    </div>
+
+    <div>
+        <label for="EnergyCost">Energy Cost:</label>
+        <InputNumber id="EnergyCost" @bind-Value="shieldData.EnergyCost" />
+    </div>
+
+    <div>
+        <label for="BuildTime">Build Time:</label>
+        <InputNumber id="BuildTime" @bind-Value="shieldData.BuildTime" />
+    </div>
+
+    <div>
+        <label for="ShieldHealth">Shield Health:</label>
+        <InputNumber id="ShieldHealth" @bind-Value="shieldData.ShieldHealth" />
+    </div>
+
+    <div>
+        <label for="ShieldRegen">Shield Regen:</label>
+        <InputNumber id="ShieldRegen" @bind-Value="shieldData.ShieldRegen" />
+    </div>
+
+    <div>
+        <label for="ShieldSize">Shield Size:</label>
+        <InputNumber id="ShieldSize" @bind-Value="shieldData.ShieldSize" />
+    </div>
+
+    <div>
+        <label for="ShieldRechargeTime">Shield Recharge Time:</label>
+        <InputNumber id="ShieldRechargeTime" @bind-Value="shieldData.ShieldRechargeTime" />
+    </div>
+
+        <div>
+        <label for="BuildRate">Build Rate:</label>
+        <InputNumber id="BuildRate" @bind-Value="shieldData.BuildRate" />
+    </div>
+
+    <div>
+        <label for="EnergyDrain">Energy Drain:</label>
+        <InputNumber id="EnergyDrain" @bind-Value="shieldData.EnergyDrain" />
+    </div>
+
+    <div>
+        <label for="VisionRadius">Vision Radius:</label>
+        <InputNumber id="VisionRadius" @bind-Value="shieldData.VisionRadius" />
+    </div>
+      
+    
+    
+    <button type="submit">Input Data</button>
+
+</EditForm>
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 1em;
+        font-family: Arial, sans-serif;
+    }
+
+    thead th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        padding: 10px;
+        border-bottom: 2px solid #ddd;
+        text-align: left;
+    }
+
+    tbody th {
+        text-align: left;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:hover {
+        background-color: #e9e9e9;
+    }
+</style>
+<table>
+    <thead>
+        <tr>
+            <th>Unit Stats</th>
+            <th>5% Buff</th>
+            <th>2.5% Buff</th>
+            <th>Base Stats</th>
+            <th>2.5% Nerf</th>
+            <th>5% Nerff</th>
+            <th>10% Nerff</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Unit ID</th>
+            <td>@shieldData.UnitID</td>
+        </tr>
+        <tr>
+            <th>Health</th>
+            <td>@nerf5Data?.Health</td>
+            <td>@nerf025Data?.Health</td>
+            <td>@shieldData.Health</td>
+            <td>@buff025Percent?.Health</td>
+            <td>@buff5Percent?.Health</td>
+            <td>@buff10Percent?.Health</td>
+        </tr>
+        <tr>
+            <th>Mass Cost</th>
+            <td>@shieldData.MassCost</td>
+        </tr>
+        <tr>
+            <th>Energy Cost</th>
+            <td>@shieldData.EnergyCost</td>
+        </tr>
+        <tr>
+            <th>Build Time</th>
+            <td>@shieldData.BuildTime</td>
+        </tr>
+        <tr>
+            <th>Shield Health</th>
+            <td>@shieldData.ShieldHealth</td>
+        </tr>
+        <tr>
+            <th>Shield Regen</th>
+            <td>@shieldData.ShieldRegen</td>
+        </tr>
+        <tr>
+            <th>Shield Size</th>
+            <td>@shieldData.ShieldSize</td>
+        </tr>
+        <tr>
+            <th>Shield Recharge Time</th>
+            <td>@shieldData.ShieldRechargeTime</td>
+        </tr>
+        <tr>
+            <th>Build Rate</th>
+            <td>@shieldData.BuildRate</td>
+        </tr>
+        <tr>
+            <th>Energy Drain</th>
+            <td>@shieldData.EnergyDrain</td>
+        </tr>
+        <tr>
+            <th>Vision Radius</th>
+            <td>@shieldData.VisionRadius</td>
+        </tr>
+    </tbody>
+</table>
+
+@code {
+    // Create a class to hold the form data
+    private FormData shieldData = new FormData();
+    private Nerf5Percent? nerf5Data;
+    private Nerf025Percent? nerf025Data;
+    private Buff025Percent? buff025Percent;
+    private Buff5Percent? buff5Percent;
+    private Buff10Percent? buff10Percent;
+
+    private void HandleValidSubmit()
+    {
+        // Apply 5% Nerf
+        nerf5Data = new Nerf5Percent(shieldData);
+
+        // Apply 2.5% Nerf
+        nerf025Data = new Nerf025Percent(shieldData);
+
+        // Apply 2.5% Buff
+        buff025Percent = new Buff025Percent(shieldData);
+
+        // Apply 5% Buff
+        buff5Percent = new Buff5Percent(shieldData);
+
+        // Apply 10% Buff
+        buff10Percent = new Buff10Percent(shieldData);
+
+    }
+
+    public class FormData
+    {
+        public string UnitID { get; set; }
+        public int Health { get; set; }
+        public int MassCost { get; set; }
+        public int EnergyCost { get; set; }
+        public int BuildTime { get; set; }
+        public int ShieldHealth { get; set; }
+        public int ShieldRegen { get; set; }
+        public int ShieldSize { get; set; }
+        public int ShieldRechargeTime { get; set; }
+        public int BuildRate { get; set; }
+        public int EnergyDrain { get; set; }
+        public int VisionRadius { get; set; }     
+    }
+
+
+    // Nerf / Buff Stats
+
+    // Method for applying the -5% reduction to stats
+    public static int ReduceByPercentage(int originalValue, double percetage)
+    {
+        return (int)(originalValue * (1 - percetage / 100));
+    }
+
+
+    // Reduce by -5%
+    public class Nerf5Percent
+    {
+        public string UnitID { get; set; }
+
+        public Nerf5Percent(FormData originalData)
+        {
+            UnitID = originalData.UnitID;
+            Health = ReduceByPercentage(originalData.Health, -5);
+            ShieldHealth = ReduceByPercentage(originalData.ShieldHealth, -5);
+            ShieldRegen = ReduceByPercentage(originalData.ShieldRegen, -5);
+            ShieldSize = ReduceByPercentage(originalData.ShieldSize, -5);
+            ShieldRechargeTime = ReduceByPercentage(originalData.ShieldRechargeTime, -5);
+            BuildRate = ReduceByPercentage(originalData.BuildRate, -5);
+            EnergyDrain = ReduceByPercentage(originalData.EnergyDrain, -5);
+            VisionRadius = ReduceByPercentage(originalData.VisionRadius, -5);
+        }
+
+        public int Health { get; set; }
+        public int ShieldHealth { get; set; }
+        public int ShieldRegen { get; set; }
+        public int ShieldSize { get; set; }
+        public int ShieldRechargeTime { get; set; }
+        public int BuildRate { get; set; }
+        public int EnergyDrain { get; set; }
+        public int VisionRadius { get; set; }
+    }
+
+    // Reduce by -2.5%
+    public class Nerf025Percent
+    {
+        public string UnitID { get; set; }
+
+        public Nerf025Percent(FormData originalData)
+        {
+            UnitID = originalData.UnitID;
+            Health = ReduceByPercentage(originalData.Health, -2.5);
+            ShieldHealth = ReduceByPercentage(originalData.ShieldHealth, -2.5);
+            ShieldRegen = ReduceByPercentage(originalData.ShieldRegen, -2.5);
+            ShieldSize = ReduceByPercentage(originalData.ShieldSize, -2.5);
+            ShieldRechargeTime = ReduceByPercentage(originalData.ShieldRechargeTime, -2.5);
+            BuildRate = ReduceByPercentage(originalData.BuildRate, -2.5);
+            EnergyDrain = ReduceByPercentage(originalData.EnergyDrain, -2.5);
+            VisionRadius = ReduceByPercentage(originalData.VisionRadius, -2.5);
+        }
+
+        public int Health { get; set; }
+        public int ShieldHealth { get; set; }
+        public int ShieldRegen { get; set; }
+        public int ShieldSize { get; set; }
+        public int ShieldRechargeTime { get; set; }
+        public int BuildRate { get; set; }
+        public int EnergyDrain { get; set; }
+        public int VisionRadius { get; set; }
+    }
+
+    // buff by 2.5%
+    public class Buff025Percent
+    {
+        public string UnitID { get; set; }
+
+        public Buff025Percent(FormData originalData)
+        {
+            UnitID = originalData.UnitID;
+            Health = ReduceByPercentage(originalData.Health, 2.5);
+            ShieldHealth = ReduceByPercentage(originalData.ShieldHealth, 2.5);
+            ShieldRegen = ReduceByPercentage(originalData.ShieldRegen, 2.5);
+            ShieldSize = ReduceByPercentage(originalData.ShieldSize, 2.5);
+            ShieldRechargeTime = ReduceByPercentage(originalData.ShieldRechargeTime, 2.5);
+            BuildRate = ReduceByPercentage(originalData.BuildRate, 2.5);
+            EnergyDrain = ReduceByPercentage(originalData.EnergyDrain, 2.5);
+            VisionRadius = ReduceByPercentage(originalData.VisionRadius, 2.5);
+        }
+
+        public int Health { get; set; }
+        public int ShieldHealth { get; set; }
+        public int ShieldRegen { get; set; }
+        public int ShieldSize { get; set; }
+        public int ShieldRechargeTime { get; set; }
+        public int BuildRate { get; set; }
+        public int EnergyDrain { get; set; }
+        public int VisionRadius { get; set; }
+    }
+
+    // Buff by 5%
+    public class Buff5Percent
+    {
+        public string UnitID { get; set; }
+
+        public Buff5Percent(FormData originalData)
+        {
+            UnitID = originalData.UnitID;
+            Health = ReduceByPercentage(originalData.Health, 5);
+            MassCost = ReduceByPercentage(originalData.MassCost, 5);
+            EnergyCost = ReduceByPercentage(originalData.EnergyCost, 5);
+            BuildTime = ReduceByPercentage(originalData.BuildTime, 5);
+            ShieldHealth = ReduceByPercentage(originalData.ShieldHealth, 5);
+            ShieldRegen = ReduceByPercentage(originalData.ShieldRegen, 5);
+            ShieldSize = ReduceByPercentage(originalData.ShieldSize, 5);
+            ShieldRechargeTime = ReduceByPercentage(originalData.ShieldRechargeTime, 5);
+            BuildRate = ReduceByPercentage(originalData.BuildRate, 5);
+            EnergyDrain = ReduceByPercentage(originalData.EnergyDrain, 5);
+            VisionRadius = ReduceByPercentage(originalData.VisionRadius, 5);
+        }
+
+        public int Health { get; set; }
+        public int MassCost { get; set; }
+        public int EnergyCost { get; set; }
+        public int BuildTime { get; set; }
+        public int ShieldHealth { get; set; }
+        public int ShieldRegen { get; set; }
+        public int ShieldSize { get; set; }
+        public int ShieldRechargeTime { get; set; }
+        public int BuildRate { get; set; }
+        public int EnergyDrain { get; set; }
+        public int VisionRadius { get; set; }
+    }
+
+    // Buff by 5%
+    public class Buff10Percent
+    {
+        public string UnitID { get; set; }
+
+        public Buff10Percent(FormData originalData)
+        {
+            UnitID = originalData.UnitID;
+            Health = ReduceByPercentage(originalData.Health, 10);
+            MassCost = ReduceByPercentage(originalData.MassCost, 10);
+            EnergyCost = ReduceByPercentage(originalData.EnergyCost, 10);
+            BuildTime = ReduceByPercentage(originalData.BuildTime, 10);
+            ShieldHealth = ReduceByPercentage(originalData.ShieldHealth, 10);
+            ShieldRegen = ReduceByPercentage(originalData.ShieldRegen, 10);
+            ShieldSize = ReduceByPercentage(originalData.ShieldSize, 10);
+            ShieldRechargeTime = ReduceByPercentage(originalData.ShieldRechargeTime, 10);
+            BuildRate = ReduceByPercentage(originalData.BuildRate, 10);
+            EnergyDrain = ReduceByPercentage(originalData.EnergyDrain, 10);
+            VisionRadius = ReduceByPercentage(originalData.VisionRadius, 10);
+        }
+
+        public int Health { get; set; }
+        public int MassCost { get; set; }
+        public int EnergyCost { get; set; }
+        public int BuildTime { get; set; }
+        public int ShieldHealth { get; set; }
+        public int ShieldRegen { get; set; }
+        public int ShieldSize { get; set; }
+        public int ShieldRechargeTime { get; set; }
+        public int BuildRate { get; set; }
+        public int EnergyDrain { get; set; }
+        public int VisionRadius { get; set; }
+    }
+}

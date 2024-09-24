@@ -1,0 +1,51 @@
+﻿@page "/caculator"
+
+<PageTitle>Caculator</PageTitle>
+
+<h3>Caculator</h3>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Land</th>
+            <th>Naval</th>
+            <th>Air</th>
+            <th>Structures</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <NavLink class="nav-link" href="unit-caculators/shield">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Shield
+                </NavLink>
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
