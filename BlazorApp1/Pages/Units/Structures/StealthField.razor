@@ -1,0 +1,368 @@
+﻿@page "/units/structures/stealthfield"
+@inject BlazorApp1.Services.CalculationService CaculationHelper
+
+<h3>Stealth Field Caculator</h3>
+
+<EditForm Model="@unitData" OnValidSubmit="HandleValidSubmit" class="unit-form-condensed">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="validation-summary" />
+
+    <!-- Description Section -->
+    <h3>Description</h3>
+    <div class="form-row description">
+        <div class="form-group">
+            <label for="UnitName">Unit Name:</label>
+            <InputText id="UnitName" @bind-Value="unitData.UnitName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="UnitID">Unit ID:</label>
+            <InputText id="UnitID" @bind-Value="unitData.UnitID" class="form-control" />
+        </div>
+    </div>
+
+    <!-- Base Stats Section -->
+    <h3>Base Stats</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="Health">Health:</label>
+            <InputNumber id="Health" @bind-Value="unitData.Health" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="MassCost">Mass Cost:</label>
+            <InputNumber id="MassCost" @bind-Value="unitData.MassCost" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="EnergyCost">Energy Cost:</label>
+            <InputNumber id="EnergyCost" @bind-Value="unitData.EnergyCost" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="BuildTime">Build Time:</label>
+            <InputNumber id="BuildTime" @bind-Value="unitData.BuildTime" class="form-control" />
+        </div>
+    </div>
+
+    <!-- Economy Section -->
+    <h3>Economy</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="BuildRate">Build Rate:</label>
+            <InputNumber id="BuildRate" @bind-Value="unitData.BuildRate" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="EnergyDrain">Energy Drain:</label>
+            <InputNumber id="EnergyDrain" @bind-Value="unitData.EnergyDrain" class="form-control" />
+        </div>
+    </div>
+
+    <!-- Intel Section -->
+    <h3>Intel</h3>
+    <div class="form-row">
+        <div class="form-group">
+            <label for="VisionRadius">Vision Radius:</label>
+            <InputNumber id="VisionRadius" @bind-Value="unitData.VisionRadius" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="StealthRadius">Stealth Radius:</label>
+            <InputNumber id="StealthRadius" @bind-Value="unitData.StealthRadius" class="form-control" />
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn-submit">Input Data</button>
+</EditForm>
+
+<!-- Condensed Styling Section -->
+<style>
+    .unit-form-condensed {
+        max-width: 1000px;
+        margin: 0 auto 20px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        margin: 10px 0;
+        font-size: 1.2em;
+        color: #333;
+        border-bottom: 1px solid #007bff;
+        padding-bottom: 3px;
+        text-align: center;
+    }
+
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        flex: 1 1 22%;
+        text-align: center;
+        margin: 0 5px;
+    }
+
+    .form-group.full-width {
+        flex: 1 1 100%;
+        margin: 0 5px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 2px;
+        font-weight: bold;
+        font-size: 0.9em;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 5px;
+        font-size: 0.9em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+    }
+
+    .btn-submit {
+        display: block;
+        width: 100%;
+        padding: 8px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+@if (unitList.Count > 0)
+{
+    <table>
+        <thead>
+            <tr>
+                <th></th> <!-- Empty for column headers -->
+                @foreach (var unit in unitList)
+                {
+                    <th>@unit.UnitID</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Unit ID</th>
+                @foreach (var unit in unitList)
+                {
+                    <td>@unit.UnitID</td>
+                }
+            </tr>
+            <tr>
+                <th>Health</th>
+                @for (int i = 0; i < unitList.Count; i++)
+                {
+                    <td>
+                        @unitList[i].Health
+                        @if (i > 0)
+                        {
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].Health, unitList[i - 1].Health)%)</span>
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Mass Cost</th>
+                @for (int i = 0; i < unitList.Count; i++)
+                {
+                    <td>
+                        @unitList[i].MassCost
+                        @if (i > 0)
+                        {
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].MassCost, unitList[i - 1].MassCost)%)</span>
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Energy Cost</th>
+                @for (int i = 0; i < unitList.Count; i++)
+                {
+                    <td>
+                        @unitList[i].EnergyCost
+                        @if (i > 0)
+                        {
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].EnergyCost, unitList[i - 1].EnergyCost)%)</span>
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Build Time</th>
+                @for (int i = 0; i < unitList.Count; i++)
+                {
+                    <td>
+                        @unitList[i].BuildTime
+                        @if (i > 0)
+                        {
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].BuildTime, unitList[i - 1].BuildTime)%)</span>
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Build Rate</th>
+                @for (int i = 0; i < unitList.Count; i++)
+                {
+                    <td>
+                        @unitList[i].BuildRate
+                        @if (i > 0)
+                        {
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].BuildRate, unitList[i - 1].BuildRate)%)</span>
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Energy Drain</th>
+                @for (int i = 0; i < unitList.Count; i++)
+                {
+                    <td>
+                        @unitList[i].EnergyDrain
+                        @if (i > 0)
+                        {
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].EnergyDrain, unitList[i - 1].EnergyDrain)%)</span>
+                        }
+                    </td>
+                }
+            </tr>
+            <tr>
+                <th>Vision Radius</th>
+                @for (int i = 0; i < unitList.Count; i++)
+                {
+                    <td>
+                        @unitList[i].VisionRadius
+                        @if (i > 0)
+                        {
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].VisionRadius, unitList[i - 1].VisionRadius)%)</span>
+                        }
+                    </td>
+                }
+            </tr>
+            <!-- Row for Delete Buttons -->
+            <tr>
+                <th>Delete Unit</th> <!-- Empty header for delete row -->
+                @foreach (var shield in unitList)
+                {
+                    <td>
+                        <button @onclick="() => DeleteShield(shield)">Delete</button>
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
+}
+
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 1em;
+        font-family: Arial, sans-serif;
+    }
+
+    thead th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        padding: 10px;
+        border-bottom: 2px solid #ddd;
+        text-align: left;
+    }
+
+    tbody th {
+        text-align: left;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tbody tr:hover {
+        background-color: #e9e9e9;
+    }
+</style>
+
+@code {
+    // A List to Store Mutiple Shield Data
+    private List<FormData> unitList = new List<FormData>();
+
+    // Model to hold the new shield data input by the user
+    private FormData unitData = new FormData();
+
+    private void HandleValidSubmit()
+    {
+
+        // Add the new unit Data to the lsit
+        unitList.Add(new FormData
+            {
+                UnitID = unitData.UnitID,
+                Health = unitData.Health,
+                MassCost = unitData.MassCost,
+                EnergyCost = unitData.EnergyCost,
+                BuildTime = unitData.BuildTime,
+                BuildRate = unitData.BuildRate,
+                EnergyDrain = unitData.EnergyDrain,
+                VisionRadius = unitData.VisionRadius
+            });
+
+        // Reset the form for the next shield data input
+        unitData = new FormData();
+    }
+
+    // Use the helper method to calculate the percentage change between two values
+    private double GetPercentageChange(int currentValue, int previousValue)
+    {
+        return Services.CalculationService.PercentageChange(currentValue, previousValue);
+    }
+
+    // Method to delete shield by index
+    private void DeleteShield(FormData shield)
+    {
+        unitList.Remove(shield);
+    }
+
+    public class FormData
+    {
+        public string UnitName { get; set; }
+        public string UnitID { get; set; }
+        public int Health { get; set; }
+        public int MassCost { get; set; }
+        public int EnergyCost { get; set; }
+        public int BuildTime { get; set; }
+        public int BuildRate { get; set; }
+        public int EnergyDrain { get; set; }
+        public int VisionRadius { get; set; }
+        public int StealthRadius { get; set; }
+    }
+}

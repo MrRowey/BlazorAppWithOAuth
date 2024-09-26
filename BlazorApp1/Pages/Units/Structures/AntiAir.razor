@@ -1,8 +1,11 @@
-﻿@page "/unit-caculators/shield"
+﻿@using BlazorApp1.Models
 
-<h3>Shield Caculator</h3>
+@page "/units/structures/antiair"
+@inject BlazorApp1.Services.CalculationService CaculationHelper
 
-<EditForm Model="@shieldData" OnValidSubmit="HandleValidSubmit" class="shield-form-condensed">
+<h3>Anti Air Caculator</h3>
+
+<EditForm Model="@unitData" OnValidSubmit="HandleValidSubmit" class="unit-form-condensed">
     <DataAnnotationsValidator />
     <ValidationSummary class="validation-summary" />
 
@@ -11,11 +14,11 @@
     <div class="form-row description">
         <div class="form-group">
             <label for="UnitName">Unit Name:</label>
-            <InputText id="UnitName" @bind-Value="shieldData.UnitName" class="form-control" />
+            <InputText id="UnitName" @bind-Value="unitData.UnitName" class="form-control" />
         </div>
         <div class="form-group">
             <label for="UnitID">Unit ID:</label>
-            <InputText id="UnitID" @bind-Value="shieldData.UnitID" class="form-control" />
+            <InputText id="UnitID" @bind-Value="unitData.UnitID" class="form-control" />
         </div>
     </div>
 
@@ -24,53 +27,59 @@
     <div class="form-row">
         <div class="form-group">
             <label for="Health">Health:</label>
-            <InputNumber id="Health" @bind-Value="shieldData.Health" class="form-control" />
+            <InputNumber id="Health" @bind-Value="unitData.Health" class="form-control" />
         </div>
         <div class="form-group">
             <label for="MassCost">Mass Cost:</label>
-            <InputNumber id="MassCost" @bind-Value="shieldData.MassCost" class="form-control" />
+            <InputNumber id="MassCost" @bind-Value="unitData.MassCost" class="form-control" />
         </div>
         <div class="form-group">
             <label for="EnergyCost">Energy Cost:</label>
-            <InputNumber id="EnergyCost" @bind-Value="shieldData.EnergyCost" class="form-control" />
+            <InputNumber id="EnergyCost" @bind-Value="unitData.EnergyCost" class="form-control" />
         </div>
         <div class="form-group">
             <label for="BuildTime">Build Time:</label>
-            <InputNumber id="BuildTime" @bind-Value="shieldData.BuildTime" class="form-control" />
+            <InputNumber id="BuildTime" @bind-Value="unitData.BuildTime" class="form-control" />
         </div>
     </div>
 
-    <!-- Shield Stats Section -->
-    <h3>Shield Stats</h3>
+    <!-- AA Stats Section -->
+    <h3>Weapon Stats</h3>
     <div class="form-row">
         <div class="form-group">
-            <label for="ShieldHealth">Health:</label>
-            <InputNumber id="ShieldHealth" @bind-Value="shieldData.ShieldHealth" class="form-control" />
+            <label for="ShieldHealth">Damage:</label>
+            <InputNumber id="Damage" @bind-Value="unitData.Damage" class="form-control" />
         </div>
         <div class="form-group">
-            <label for="ShieldRegen">Regen:</label>
-            <InputNumber id="ShieldRegen" @bind-Value="shieldData.ShieldRegen" class="form-control" />
+            <label for="Range">Range:</label>
+            <InputNumber id="Range" @bind-Value="unitData.Range" class="form-control" />
         </div>
         <div class="form-group">
-            <label for="ShieldSize">Size:</label>
-            <InputNumber id="ShieldSize" @bind-Value="shieldData.ShieldSize" class="form-control" />
+            <label for="DamageRadius">Size:</label>
+            <InputNumber id="DamageRadius" @bind-Value="unitData.DamageRadius" class="form-control" />
         </div>
         <div class="form-group">
-            <label for="ShieldRechargeTime">Recharge Time:</label>
-            <InputNumber id="ShieldRechargeTime" @bind-Value="shieldData.ShieldRechargeTime" class="form-control" />
+            <label for="MuzzleVelocity">Recharge Time:</label>
+            <InputNumber id="MuzzleVelocity" @bind-Value="unitData.MuzzleVelocity" class="form-control" />
         </div>
-    </div>
+        <div class="form-group">
+            <label for="Lifetime">Recharge Time:</label>
+            <InputNumber id="Lifetime" @bind-Value="unitData.Lifetime" class="form-control" />
+        </div>
 
-    <!-- Economy Section -->
-    <h3>Economy</h3>
-    <div class="form-row">
+        <h4>Fire Cycle</h4>
+
         <div class="form-group">
-            <label for="BuildRate">Build Rate:</label>
-            <InputNumber id="BuildRate" @bind-Value="shieldData.BuildRate" class="form-control" />
+            <label for="Shots">Number of Shots:</label>
+            <InputNumber id="Shots" @bind-Value="unitData.Shots" class="form-control" />
         </div>
         <div class="form-group">
-            <label for="EnergyDrain">Energy Drain:</label>
-            <InputNumber id="EnergyDrain" @bind-Value="shieldData.EnergyDrain" class="form-control" />
+            <label for="RoF">Rate of Fire:</label>
+            <InputNumber id="RoF" @bind-Value="unitData.RoF" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="Reload">Reload Speed:</label>
+            <InputNumber id="Reload" @bind-Value="unitData.Reload" class="form-control" />
         </div>
     </div>
 
@@ -79,7 +88,7 @@
     <div class="form-row">
         <div class="form-group full-width">
             <label for="VisionRadius">Vision Radius:</label>
-            <InputNumber id="VisionRadius" @bind-Value="shieldData.VisionRadius" class="form-control" />
+            <InputNumber id="VisionRadius" @bind-Value="unitData.VisionRadius" class="form-control" />
         </div>
     </div>
 
@@ -89,7 +98,7 @@
 
 <!-- Condensed Styling Section -->
 <style>
-    .shield-form-condensed {
+    .unit-form-condensed {
         max-width: 1000px;
         margin: 0 auto 20px;
         padding: 10px;
@@ -167,165 +176,165 @@
 </style>
 
 
-@if (shieldList.Count > 0)
+@if (unitList.Count > 0)
 {
     <table>
         <thead>
             <tr>
                 <th></th> <!-- Empty for column headers -->
-                @foreach (var shield in shieldList)
+                @foreach (var unit in unitList)
                 {
-                    <th>@shield.UnitID</th>
+                    <th>@unit.UnitName</th>
                 }
             </tr>
         </thead>
         <tbody>
             <tr>
                 <th>Unit ID</th>
-                @foreach (var shield in shieldList)
+                @foreach (var unit in unitList)
                 {
-                    <td>@shield.UnitID</td>
+                    <td>@unit.UnitID</td>
                 }
             </tr>
             <tr>
                 <th>Health</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].Health
+                        @unitList[i].Health
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].Health, shieldList[i - 1].Health)%)</span>
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].Health, unitList[i - 1].Health)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
                 <th>Mass Cost</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].MassCost
+                        @unitList[i].MassCost
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].MassCost, shieldList[i - 1].MassCost)%)</span>
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].MassCost, unitList[i - 1].MassCost)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
                 <th>Energy Cost</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].EnergyCost
+                        @unitList[i].EnergyCost
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].EnergyCost, shieldList[i - 1].EnergyCost)%)</span>
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].EnergyCost, unitList[i - 1].EnergyCost)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
                 <th>Build Time</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].BuildTime
+                        @unitList[i].BuildTime
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].BuildTime, shieldList[i - 1].BuildTime)%)</span>
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].BuildTime, unitList[i - 1].BuildTime)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
-                <th>Shield Health</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                <th>Damage</th>
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].ShieldHealth
+                        @unitList[i].Damage
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].ShieldHealth, shieldList[i - 1].ShieldHealth)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].Damage, unitList[i - 1].Damage)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
-                <th>Shield Regen</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                <th>Muzzle Velocity</th>
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].ShieldRegen
+                        @unitList[i].MuzzleVelocity
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].ShieldRegen, shieldList[i - 1].ShieldRegen)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].MuzzleVelocity, unitList[i - 1].MuzzleVelocity)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
-                <th>Shield Size</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                <th>Lifetime</th>
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].ShieldSize
+                        @unitList[i].Lifetime
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].ShieldSize, shieldList[i - 1].ShieldSize)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].Lifetime, unitList[i - 1].Lifetime)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
-                <th>Shield Recharge Time</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                <th>Fire Cycle</th>
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].ShieldRechargeTime
+                        @unitList[i].FireCycle
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].ShieldRechargeTime, shieldList[i - 1].ShieldRechargeTime)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].FireCycle, unitList[i - 1].FireCycle)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
                 <th>Build Rate</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].BuildRate
+                        @unitList[i].BuildRate
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].BuildRate, shieldList[i - 1].BuildRate)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].BuildRate, unitList[i - 1].BuildRate)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
                 <th>Energy Drain</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].EnergyDrain
+                        @unitList[i].EnergyDrain
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].EnergyDrain, shieldList[i - 1].EnergyDrain)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].EnergyDrain, unitList[i - 1].EnergyDrain)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
                 <th>Vision Radius</th>
-                @for (int i = 0; i < shieldList.Count; i++)
+                @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @shieldList[i].VisionRadius
+                        @unitList[i].VisionRadius
                         @if (i > 0)
                         {
-                            <span>(@PercentageChange(shieldList[i].VisionRadius, shieldList[i - 1].VisionRadius)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].VisionRadius, unitList[i - 1].VisionRadius)%)</span>
                         }
                     </td>
                 }
@@ -333,7 +342,7 @@
             <!-- Row for Delete Buttons -->
             <tr>
                 <th>Delete Unit</th> <!-- Empty header for delete row -->
-                @foreach (var shield in shieldList)
+                @foreach (var shield in unitList)
                 {
                     <td> 
                         <button @onclick="() => DeleteShield(shield)">Delete</button>
@@ -383,63 +392,43 @@
 </style>
 
 @code {
-    // A List to Store Mutiple Shield Data
-    private List<FormData> shieldList = new List<FormData>();
-
-    // Model to hold the new shield data input by the user
-    private FormData shieldData = new FormData();
+    private AntiAirUnit unitData = new AntiAirUnit("","",0,0,0,0,0,0,0,0,0,0,0,0,0);
+    private List<AntiAirUnit> unitList = new List<AntiAirUnit>();
 
     private void HandleValidSubmit()
     {
-
-        // Add the new shield Data to the lsit
-        shieldList.Add(new FormData
-            {
-                UnitID = shieldData.UnitID,
-                Health = shieldData.Health,
-                MassCost = shieldData.MassCost,
-                EnergyCost = shieldData.EnergyCost,
-                BuildTime = shieldData.BuildTime,
-                ShieldHealth = shieldData.ShieldHealth,
-                ShieldRegen = shieldData.ShieldRegen,
-                ShieldSize = shieldData.ShieldSize,
-                ShieldRechargeTime = shieldData.ShieldRechargeTime,
-                BuildRate = shieldData.BuildRate,
-                EnergyDrain = shieldData.EnergyDrain,
-                VisionRadius = shieldData.VisionRadius
-            });
+        // Add the new unit Data to the lsit
+        unitList.Add(new AntiAirUnit(
+            unitData.UnitName,
+            unitData.UnitID,
+            unitData.Health,
+            unitData.MassCost,
+            unitData.EnergyCost,
+            unitData.BuildTime,
+            unitData.VisionRadius,
+            unitData.DamagePerShot,
+            unitData.DamageRadius,
+            unitData.Range,
+            unitData.MuzzleVelocity,
+            unitData.Lifetime,
+            unitData.Shots,
+            unitData.RoF,
+            unitData.Reload));
 
         // Reset the form for the next shield data input
-        shieldData = new FormData();
+        unitData = new AntiAirUnit("", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
-    // Caculate the Percetage Chnage between two values
-    private double PercentageChange(int currentValue, int previousValue)
+    // Use the helper method to calculate the percentage change between two values
+    private double GetPercentageChange(int currentValue, int previousValue)
     {
-        if(previousValue == 0) return 0; // Avoid divide by zero
-        return Math.Round(((double)(currentValue - previousValue) / previousValue) * 100, 2);
+        return CaculationHelper.PercentageChange(currentValue, previousValue);
     }
 
     // Method to delete shield by index
     private void DeleteShield(FormData shield)
     {
-        shieldList.Remove(shield);
+        unitList.Remove(shield);
     }
 
-    public class FormData
-    {
-        public string UnitName { get; set; }
-        public string UnitID { get; set; }
-        public int Health { get; set; }
-        public int MassCost { get; set; }
-        public int EnergyCost { get; set; }
-        public int BuildTime { get; set; }
-        public int ShieldHealth { get; set; }
-        public int ShieldRegen { get; set; }
-        public int ShieldSize { get; set; }
-        public int ShieldRechargeTime { get; set; }
-        public int BuildRate { get; set; }
-        public int EnergyDrain { get; set; }
-        public int VisionRadius { get; set; }     
-    }
 }
