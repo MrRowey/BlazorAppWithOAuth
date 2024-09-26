@@ -1,4 +1,6 @@
-﻿@page "/units/structures/shield"
+﻿@using BlazorApp1.Models
+
+@page "/units/structures/shield"
 @inject BlazorApp1.Services.CalculationService CaculationHelper
 
 <h3>Shield Caculator</h3>
@@ -50,7 +52,7 @@
         </div>
         <div class="form-group">
             <label for="ShieldRegen">Regen:</label>
-            <InputNumber id="ShieldRegen" @bind-Value="unitData.ShieldRegen" class="form-control" />
+            <InputNumber id="ShieldRegen" @bind-Value="unitData.ShieldRegenRate" class="form-control" />
         </div>
         <div class="form-group">
             <label for="ShieldSize">Size:</label>
@@ -80,7 +82,7 @@
     <div class="form-row">
         <div class="form-group full-width">
             <label for="VisionRadius">Vision Radius:</label>
-            <InputNumber id="VisionRadius" @bind-Value="unitData.VisionRadius" class="form-control" />
+            <InputNumber id="VisionRadius" @bind-Value="unitData.VisionRange" class="form-control" />
         </div>
     </div>
 
@@ -248,7 +250,7 @@
                         @unitList[i].ShieldHealth
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].ShieldHealth, unitList[i - 1].ShieldHealth)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].ShieldHealth, unitList[i - 1].ShieldHealth)%)</span>
                         }
                     </td>
                 }
@@ -258,10 +260,10 @@
                 @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @unitList[i].ShieldRegen
+                        @unitList[i].ShieldRegenRate
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].ShieldRegen, unitList[i - 1].ShieldRegen)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].ShieldRegenRate, unitList[i - 1].ShieldRegenRate)%)</span>
                         }
                     </td>
                 }
@@ -274,7 +276,7 @@
                         @unitList[i].ShieldSize
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].ShieldSize, unitList[i - 1].ShieldSize)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].ShieldSize, unitList[i - 1].ShieldSize)%)</span>
                         }
                     </td>
                 }
@@ -287,7 +289,7 @@
                         @unitList[i].ShieldRechargeTime
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].ShieldRechargeTime, unitList[i - 1].ShieldRechargeTime)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].ShieldRechargeTime, unitList[i - 1].ShieldRechargeTime)%)</span>
                         }
                     </td>
                 }
@@ -300,7 +302,7 @@
                         @unitList[i].BuildRate
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].BuildRate, unitList[i - 1].BuildRate)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].BuildRate, unitList[i - 1].BuildRate)%)</span>
                         }
                     </td>
                 }
@@ -313,7 +315,7 @@
                         @unitList[i].EnergyDrain
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].EnergyDrain, unitList[i - 1].EnergyDrain)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].EnergyDrain, unitList[i - 1].EnergyDrain)%)</span>
                         }
                     </td>
                 }
@@ -323,10 +325,10 @@
                 @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @unitList[i].VisionRadius
+                        @unitList[i].VisionRange
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].VisionRadius, unitList[i - 1].VisionRadius)%)</span>
+                            <span>(@Services.CalculationService.PercentageChange(unitList[i].VisionRange, unitList[i - 1].VisionRange)%)</span>
                         }
                     </td>
                 }
@@ -334,10 +336,10 @@
             <!-- Row for Delete Buttons -->
             <tr>
                 <th>Delete Unit</th> <!-- Empty header for delete row -->
-                @foreach (var shield in unitList)
+                @foreach (var unit in unitList)
                 {
                     <td> 
-                        <button @onclick="() => DeleteShield(shield)">Delete</button>
+                        <button @onclick="() => DeleteShield(unit)">Delete</button>
                     </td>
                 }
             </tr>
@@ -384,34 +386,31 @@
 </style>
 
 @code {
-    // A List to Store Mutiple Shield Data
-    private List<FormData> unitList = new List<FormData>();
-
-    // Model to hold the new shield data input by the user
-    private FormData unitData = new FormData();
+    private ShieldUnit unitData = new ShieldUnit("", "",0,0,0,0,0,0,0,0,0,0,0);
+    private List<ShieldUnit> unitList = new List<ShieldUnit>();
 
     private void HandleValidSubmit()
     {
-
         // Add the new unit Data to the lsit
-        unitList.Add(new FormData
-            {
-                UnitID = unitData.UnitID,
-                Health = unitData.Health,
-                MassCost = unitData.MassCost,
-                EnergyCost = unitData.EnergyCost,
-                BuildTime = unitData.BuildTime,
-                ShieldHealth = unitData.ShieldHealth,
-                ShieldRegen = unitData.ShieldRegen,
-                ShieldSize = unitData.ShieldSize,
-                ShieldRechargeTime = unitData.ShieldRechargeTime,
-                BuildRate = unitData.BuildRate,
-                EnergyDrain = unitData.EnergyDrain,
-                VisionRadius = unitData.VisionRadius
-            });
+        unitList.Add(new ShieldUnit(
+
+            unitData.UnitName,
+            unitData.UnitID,
+            unitData.Health,
+            unitData.MassCost,
+            unitData.EnergyCost,
+            unitData.BuildTime,
+            unitData.VisionRange,
+            unitData.ShieldHealth,
+            unitData.ShieldRegenRate,
+            unitData.ShieldSize,
+            unitData.ShieldRechargeTime,
+            unitData.BuildRate,
+            unitData.EnergyDrain
+        ));
 
         // Reset the form for the next shield data input
-        unitData = new FormData();
+        unitData = new ShieldUnit("","",0,0,0,0,0,0,0,0,0,0,0);
     }
 
     // Use the helper method to calculate the percentage change between two values
@@ -421,25 +420,9 @@
     }
 
     // Method to delete shield by index
-    private void DeleteShield(FormData shield)
+    private void DeleteShield(ShieldUnit unit)
     {
-        unitList.Remove(shield);
+        unitList.Remove(unit);
     }
 
-    public class FormData
-    {
-        public string UnitName { get; set; }
-        public string UnitID { get; set; }
-        public int Health { get; set; }
-        public int MassCost { get; set; }
-        public int EnergyCost { get; set; }
-        public int BuildTime { get; set; }
-        public int ShieldHealth { get; set; }
-        public int ShieldRegen { get; set; }
-        public int ShieldSize { get; set; }
-        public int ShieldRechargeTime { get; set; }
-        public int BuildRate { get; set; }
-        public int EnergyDrain { get; set; }
-        public int VisionRadius { get; set; }     
-    }
 }

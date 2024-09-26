@@ -12,7 +12,6 @@
         public int EnergyCost { get; set; }
         public int BuildTime { get; set; }
 
-
         // Intel
         public int VisionRange { get; set; }
 

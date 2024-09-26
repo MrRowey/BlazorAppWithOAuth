@@ -2,15 +2,15 @@
 {
     public class CalculationService
     {
-        public double PercentageChange( int currentValue, int previousValue)
+        public double PercentageChange( double currentValue, double previousValue)
         {
             if (previousValue == 0) return 0; // avoid division by zero
-            return Math.Round((currentValue - previousValue) / (double)previousValue * 100, 2);
+            return Math.Round((currentValue - previousValue) / previousValue * 100, 2);
         }
 
-        public double TotalFireCycle(int shotsNumber, double rateofFire, double reloadTime)
+        public double CaculateFireCycle(int NumberOfShots, double RateOfFire, double ReloadTime)
         {
-            return Math.Round(shotsNumber / rateofFire + reloadTime, 1);
+            return Math.Round((NumberOfShots / RateOfFire) + ReloadTime, 1);
         }
 
         public int TotalDamage(int shotsNumber, int damagePerShot)

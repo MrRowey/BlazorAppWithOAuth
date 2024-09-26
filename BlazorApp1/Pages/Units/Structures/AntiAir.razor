@@ -3,7 +3,7 @@
 @page "/units/structures/antiair"
 @inject BlazorApp1.Services.CalculationService CaculationHelper
 
-<h3>Anti Air Caculator</h3>
+<h3>Anti Air Compare</h3>
 
 <EditForm Model="@unitData" OnValidSubmit="HandleValidSubmit" class="unit-form-condensed">
     <DataAnnotationsValidator />
@@ -48,7 +48,7 @@
     <div class="form-row">
         <div class="form-group">
             <label for="ShieldHealth">Damage:</label>
-            <InputNumber id="Damage" @bind-Value="unitData.Damage" class="form-control" />
+            <InputNumber id="Damage" @bind-Value="unitData.DamagePerShot" class="form-control" />
         </div>
         <div class="form-group">
             <label for="Range">Range:</label>
@@ -71,15 +71,15 @@
 
         <div class="form-group">
             <label for="Shots">Number of Shots:</label>
-            <InputNumber id="Shots" @bind-Value="unitData.Shots" class="form-control" />
+            <InputNumber id="Shots" @bind-Value="unitData.NumberOfShots" class="form-control" />
         </div>
         <div class="form-group">
             <label for="RoF">Rate of Fire:</label>
-            <InputNumber id="RoF" @bind-Value="unitData.RoF" class="form-control" />
+            <InputNumber id="RoF" @bind-Value="unitData.RateOfFire" class="form-control" />
         </div>
         <div class="form-group">
             <label for="Reload">Reload Speed:</label>
-            <InputNumber id="Reload" @bind-Value="unitData.Reload" class="form-control" />
+            <InputNumber id="Reload" @bind-Value="unitData.ReloadTime" class="form-control" />
         </div>
     </div>
 
@@ -88,7 +88,7 @@
     <div class="form-row">
         <div class="form-group full-width">
             <label for="VisionRadius">Vision Radius:</label>
-            <InputNumber id="VisionRadius" @bind-Value="unitData.VisionRadius" class="form-control" />
+            <InputNumber id="VisionRadius" @bind-Value="unitData.VisionRange" class="form-control" />
         </div>
     </div>
 
@@ -204,7 +204,7 @@
                         @unitList[i].Health
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].Health, unitList[i - 1].Health)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].Health, unitList[i - 1].Health)%)</span>
                         }
                     </td>
                 }
@@ -217,7 +217,7 @@
                         @unitList[i].MassCost
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].MassCost, unitList[i - 1].MassCost)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].MassCost, unitList[i - 1].MassCost)%)</span>
                         }
                     </td>
                 }
@@ -230,7 +230,7 @@
                         @unitList[i].EnergyCost
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].EnergyCost, unitList[i - 1].EnergyCost)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].EnergyCost, unitList[i - 1].EnergyCost)%)</span>
                         }
                     </td>
                 }
@@ -243,7 +243,7 @@
                         @unitList[i].BuildTime
                         @if (i > 0)
                         {
-                            <span>(@Services.CalculationService.PercentageChange(unitList[i].BuildTime, unitList[i - 1].BuildTime)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].BuildTime, unitList[i - 1].BuildTime)%)</span>
                         }
                     </td>
                 }
@@ -253,10 +253,10 @@
                 @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @unitList[i].Damage
+                        @unitList[i].DamagePerShot
                         @if (i > 0)
                         {
-                            <span>(@CaculationHelper.PercentageChange(unitList[i].Damage, unitList[i - 1].Damage)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].DamagePerShot, unitList[i - 1].DamagePerShot)%)</span>
                         }
                     </td>
                 }
@@ -275,7 +275,7 @@
                 }
             </tr>
             <tr>
-                <th>Lifetime</th>
+                <th>Projectile Lifetime</th>
                 @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
@@ -301,40 +301,27 @@
                 }
             </tr>
             <tr>
-                <th>Build Rate</th>
+                <th>Damage Total</th>
                 @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @unitList[i].BuildRate
+                        @unitList[i].DamageTotal
                         @if (i > 0)
                         {
-                            <span>(@CaculationHelper.PercentageChange(unitList[i].BuildRate, unitList[i - 1].BuildRate)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].DamageTotal, unitList[i - 1].DamageTotal)%)</span>
                         }
                     </td>
                 }
             </tr>
             <tr>
-                <th>Energy Drain</th>
+                <th>Vision Range</th>
                 @for (int i = 0; i < unitList.Count; i++)
                 {
                     <td>
-                        @unitList[i].EnergyDrain
+                        @unitList[i].VisionRange
                         @if (i > 0)
                         {
-                            <span>(@CaculationHelper.PercentageChange(unitList[i].EnergyDrain, unitList[i - 1].EnergyDrain)%)</span>
-                        }
-                    </td>
-                }
-            </tr>
-            <tr>
-                <th>Vision Radius</th>
-                @for (int i = 0; i < unitList.Count; i++)
-                {
-                    <td>
-                        @unitList[i].VisionRadius
-                        @if (i > 0)
-                        {
-                            <span>(@CaculationHelper.PercentageChange(unitList[i].VisionRadius, unitList[i - 1].VisionRadius)%)</span>
+                            <span>(@CaculationHelper.PercentageChange(unitList[i].VisionRange, unitList[i - 1].VisionRange)%)</span>
                         }
                     </td>
                 }
@@ -405,30 +392,35 @@
             unitData.MassCost,
             unitData.EnergyCost,
             unitData.BuildTime,
-            unitData.VisionRadius,
+            unitData.VisionRange,
             unitData.DamagePerShot,
             unitData.DamageRadius,
             unitData.Range,
             unitData.MuzzleVelocity,
             unitData.Lifetime,
-            unitData.Shots,
-            unitData.RoF,
-            unitData.Reload));
+            unitData.NumberOfShots,
+            unitData.RateOfFire,
+            unitData.ReloadTime
+        ));
+
+        // Calculate the Fire Cycle
 
         // Reset the form for the next shield data input
         unitData = new AntiAirUnit("", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
-    // Use the helper method to calculate the percentage change between two values
-    private double GetPercentageChange(int currentValue, int previousValue)
+
+    private double GetFireCycle(int NumofShots, double RoF, double ReloadTime)
     {
-        return CaculationHelper.PercentageChange(currentValue, previousValue);
+        return CaculationHelper.CaculateFireCycle(NumofShots, RoF, ReloadTime);
     }
 
     // Method to delete shield by index
-    private void DeleteShield(FormData shield)
+    private void DeleteShield(AntiAirUnit unit)
     {
-        unitList.Remove(shield);
+        unitList.Remove(unit);
     }
+
+    
 
 }
